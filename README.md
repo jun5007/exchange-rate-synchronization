@@ -1,21 +1,22 @@
 # 환율 민감도 기반 클러스터링과 동조지수를 이용한 산업별 월간 수익률 예측
 
-> Exchange Rate Sensitivity Clustering and Monthly Industry Return Prediction Using Synchronization Index  
-> 2025년 2학년 1학기 팀 프로젝트  
+> Financial Data Analysis Project linked to one conference Publication<br>
+> 2025년 2학년 1학기 팀 프로젝트<br>
 > 원본 데이터와 논문 전문은 저작권 및 팀 자료 공개 범위 확인 전까지 포함하지 않습니다.
 
 ## 프로젝트와 공개 구현의 범위
 
 - 원 프로젝트명: 환율 민감도 기반 클러스터링과 동조지수를 이용한 산업별 월간 수익률 예측
 - 진행 기간: 2025.03 - 2025.06
-- 형태: 팀 프로젝트 / 논문 형식 결과물
+- 형태: Financial Data Analysis Project linked to one conference Publication
+- 원 연구 파이프라인: 환율 민감도 기반 군집화, 동조지수와 산업별 월간 수익률 예측
 - 공개 R 구현: **산업별 월간 수익률 Walk-Forward 예측**
   - 실제 실행 파일: [`src/predict_monthly_returns.R`](src/predict_monthly_returns.R)
   - 고정된 `sector_map`으로 종목을 산업에 연결
   - 과거 시점까지의 자료만 사용해 월별 동조 피처를 다시 계산
   - 과거 평균, 기본 Random Forest, 동조 피처 추가 Random Forest를 같은 평가 구간에서 비교
 
-저장소의 제목은 원 프로젝트 주제를 유지합니다. 다만 현재 공개 R 코드는 원 프로젝트의 모든 분석 단계를 재현하지 않습니다. 특히 **K-Means 군집화는 현재 코드에 구현되어 있지 않으며**, 고정 산업 매핑을 사용합니다. 따라서 이 저장소만으로 환율 민감도 기반 군집 결과를 재현할 수 있다고 주장하지 않습니다.
+이 저장소는 하나의 conference Publication에 연결된 팀 프로젝트와 별도의 공개 R 구현을 함께 설명합니다. 현재 공개 R 코드는 원 연구 파이프라인의 모든 분석 단계를 재현하지 않습니다. 특히 **K-Means 군집화는 현재 코드에 구현되어 있지 않으며**, 고정 산업 매핑을 사용합니다. 따라서 공개 R 구현을 논문의 전체 연구 파이프라인 또는 환율 민감도 기반 군집 결과의 재현으로 설명하지 않습니다.
 
 ## 실행 환경
 
@@ -43,6 +44,8 @@
 | `ret` | 종목 수익률 |
 | `fore_chg` | 외국인 지분율 변화 |
 | `USD_ret` | USD/KRW 환율 수익률 |
+
+컬럼 자료형, 날짜 형식, 검증 규칙과 합성 예시는 [`data/README.md`](data/README.md)에 정리했습니다.
 
 원본 주가·환율·수급 데이터, 논문 전문과 팀 내부 자료는 공개하지 않습니다. 데이터 출처별 이용 조건과 팀의 공개 범위를 확인하기 전에는 원본 또는 파생 데이터도 추가하지 않습니다.
 
@@ -128,11 +131,19 @@ data/merged_50stocks_fx_multi.csv
 - Walk-Forward 구조는 시간 순서를 지키지만, Random Forest 튜닝·거래비용·예측구간·통계적 유의성 검증은 포함하지 않습니다.
 - Hit Rate는 수익률의 크기와 경제적 가치를 보여주지 않으며, 평가 월 수와 함께 해석해야 합니다.
 
-## 작성 및 권리
+## 팀 프로젝트와 개인 기여
 
-- 작성자: 이석준
-- 소속: 순천향대학교 AI빅데이터학과
-- 형태: 팀 프로젝트
-- 세부 개인 기여: 공개 근거가 정리되지 않아 기재하지 않음
+- 프로젝트 형태: 팀 프로젝트
+- Seokjun Lee: **Co-author (4th author)**
+- 공개 근거: DBpia 저자 목록의 네 번째 저자
+- 세부 개인 구현 역할: 공개 기록에 명시되지 않아 주장하지 않음
+
+## Publication
+
+이민성, 홍찬기, 추민주, 이석준, 우지영, “환율 민감도 기반 클러스터링과 동조지수를 이용한 산업별 월간 수익률 예측,” *한국컴퓨터정보학회 2025 하계학술대회 논문집*, 제33권 제2호, pp. 959–961, 2025.07.
+
+- [DBpia 문헌 정보](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12337990)
+- Seokjun Lee: **Co-author (4th author)**
+- 논문 원문 PDF: 저작권 및 팀 공개 범위 확인 전까지 저장소에 포함하지 않음
 
 이 저장소는 취업 포트폴리오용 공개 초안입니다. 개인 기여도, 논문과 공개 코드의 정확한 대응 관계, 데이터 재배포 권리는 확인되기 전까지 추가로 주장하지 않습니다.

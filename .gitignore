@@ -8,3 +8,8 @@ data/
 *.hwp
 *.pdf
 *.zip
+
+# Publish only the reviewed data contract; keep raw and derived datasets ignored.
+!data/
+data/*
+!data/README.md
