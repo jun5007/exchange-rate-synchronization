@@ -131,16 +131,14 @@ data/merged_50stocks_fx_multi.csv
 - Walk-Forward 구조는 시간 순서를 지키지만, Random Forest 튜닝·거래비용·예측구간·통계적 유의성 검증은 포함하지 않습니다.
 - Hit Rate는 수익률의 크기와 경제적 가치를 보여주지 않으며, 평가 월 수와 함께 해석해야 합니다.
 
-## 팀 프로젝트와 개인 기여
+## My Contribution
 
-- 프로젝트 형태: 팀 프로젝트
-- 팀 데이터 작업: 팀원별로 담당 주식 종목을 나누어 데이터를 수집·전처리한 뒤 공통 형식으로 통합
-- 분석 방법 선택 배경: 수업에서 학습한 방법을 프로젝트에 적용하기 위해 K-Means와 Random Forest를 사용
-- Seokjun Lee의 개인 기여:
-  - 담당 종목의 데이터 수집·전처리 및 공통 형식 정리
-  - 이민성과 함께 예측 모델을 위한 Walk-Forward Validation 설계·구현
-- 논문 원고 작성: 이민성 단독 담당
-- Seokjun Lee: DBpia 저자 목록 기준 **Co-author (4th author)**. 논문 원고 작성 역할로는 표시하지 않음
+- 팀원별로 담당 주식 종목의 데이터를 수집·전처리한 뒤 분석에 사용할 수 있도록 공통 형식으로 통일
+- Minsung Lee와 함께 예측 모델 평가를 위한 Walk-Forward Validation 구조 설계 및 구현
+
+K-Means와 Random Forest는 수업에서 학습한 군집화 및 예측 방법을 실제 금융 데이터에 적용하기 위해 사용했습니다. 두 방법을 Seokjun Lee가 단독으로 설계하거나 구현한 것으로 설명하지 않습니다.
+
+논문 원고는 Minsung Lee가 단독으로 작성했습니다. Seokjun Lee는 DBpia 저자 목록 기준 **Co-author (4th author)**이지만 논문 작성 담당은 아닙니다.
 
 위 역할 설명은 사용자가 확인한 실제 분담을 기준으로 합니다. 공개 R 코드는 K-Means를 구현하지 않고 고정 산업 매핑을 사용하므로, 위 팀 프로젝트의 전체 분석 과정과 현재 저장소의 공개 구현 범위를 구분해서 해석해야 합니다.
 
