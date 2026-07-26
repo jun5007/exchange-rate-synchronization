@@ -1,10 +1,7 @@
 packages <- c(
   "tidyverse",
   "lubridate",
-  "cluster",
-  "factoextra",
-  "randomForest",
-  "scales"
+  "randomForest"
 )
 
 installed <- rownames(installed.packages())
