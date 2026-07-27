@@ -12,6 +12,10 @@ This contract applies only to the separate public R implementation. It does not 
 
 The original market, exchange-rate, and foreign-ownership data are not included. Do not publish the source or derived dataset until its redistribution terms and the team's publication agreement have been confirmed.
 
+## Source status
+
+The expected input combines stock returns, USD/KRW returns, and changes in foreign ownership ratios. The specific data providers, extraction fields, collection dates, and licenses are not preserved in the public repository. They must be confirmed from the original team materials before preparing or publishing a replacement input file.
+
 ## Required columns
 
 | Column | R type | Required format | Meaning |
