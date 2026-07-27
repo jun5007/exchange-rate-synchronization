@@ -1,3 +1,5 @@
+**English** | [한국어](./README.ko.md)
+
 # Input Data Contract
 
 The public R script expects the following local file:
@@ -43,6 +45,7 @@ SK하이닉스,2024-01-02,0.0018,0.0002,-0.0008
 exchange-rate-synchronization/
 ├─ data/
 │  ├─ README.md
+│  ├─ README.ko.md
 │  └─ merged_50stocks_fx_multi.csv  # local only; ignored by Git
 ├─ src/
 │  └─ predict_monthly_returns.R
@@ -50,3 +53,7 @@ exchange-rate-synchronization/
 ```
 
 The repository's `.gitignore` keeps `merged_50stocks_fx_multi.csv` and other raw data files out of Git while allowing this documentation file.
+
+---
+
+[Back to English Project README](../README.md)

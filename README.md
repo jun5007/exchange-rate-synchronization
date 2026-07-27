@@ -1,176 +1,186 @@
-# 환율 민감도 기반 클러스터링과 동조지수를 이용한 산업별 월간 수익률 예측
+**English** | [한국어](./README.ko.md)
 
-> Financial Data Analysis Project linked to one conference Publication<br>
-> 2025년 2학년 1학기 팀 프로젝트<br>
-> 원본 데이터와 논문 전문은 저작권 및 팀 자료 공개 범위 확인 전까지 포함하지 않습니다.
+# Forecasting Monthly Industry Returns Using Exchange-Rate Sensitivity-Based Clustering and a Synchronization Index
 
-## 프로젝트와 공개 구현의 범위
+> Team Project · 2025.03–2025.06<br>
+> Financial data analysis project linked to 1 conference publication
 
-- 원 프로젝트명: 환율 민감도 기반 클러스터링과 동조지수를 이용한 산업별 월간 수익률 예측
-- 진행 기간: 2025.03 - 2025.06
-- 형태: Financial Data Analysis Project linked to one conference Publication
-- 원 연구 파이프라인: 환율 민감도 기반 군집화, 동조지수와 산업별 월간 수익률 예측
-- 공개 R 구현: **산업별 월간 수익률 Walk-Forward 예측**
-  - 실제 실행 파일: [`src/predict_monthly_returns.R`](src/predict_monthly_returns.R)
-  - 고정된 `sector_map`으로 종목을 산업에 연결
-  - 과거 시점까지의 자료만 사용해 월별 동조 피처를 다시 계산
-  - 과거 평균, 기본 Random Forest, 동조 피처 추가 Random Forest를 같은 평가 구간에서 비교
+## Project Overview
 
-이 저장소는 하나의 conference Publication에 연결된 팀 프로젝트와 별도의 공개 R 구현을 함께 설명합니다. 현재 공개 R 코드는 원 연구 파이프라인의 모든 분석 단계를 재현하지 않습니다. 특히 **K-Means 군집화는 현재 코드에 구현되어 있지 않으며**, 고정 산업 매핑을 사용합니다. 따라서 공개 R 구현을 논문의 전체 연구 파이프라인 또는 환율 민감도 기반 군집 결과의 재현으로 설명하지 않습니다.
+This team project explored monthly industry return forecasting using exchange-rate sensitivity-based clustering, cross-industry synchronization information, and Random Forest models.
 
-## 실행 환경
+The repository documents two related but distinct scopes:
 
-| 항목 | 내용 |
+1. the original team research pipeline connected to the conference publication; and
+2. a separate public R implementation for Walk-Forward forecasting.
+
+The public implementation does not reproduce the full research pipeline. In particular, it uses a fixed `sector_map` and does not implement the original K-Means stage.
+
+## Research Question
+
+Can groupings based on exchange-rate sensitivity and synchronization signals between industries support next-month industry return forecasting?
+
+The project applied clustering and prediction methods learned in class to financial data. It does not claim to introduce a new algorithm or a novel model.
+
+## Project Status
+
+| Item | Status |
 |---|---|
-| Language | R |
-| Core libraries | tidyverse, lubridate |
-| Model | randomForest |
-| Validation | Expanding Walk-Forward |
-| Metrics | RMSE, Hit Rate |
+| Project type | Team Project |
+| Original project period | 2025.03–2025.06 |
+| Original research pipeline | Documented at a high level; not fully reproduced here |
+| Public R implementation | Available in [`src/predict_monthly_returns.R`](src/predict_monthly_returns.R) |
+| Public input data | Not included |
+| Performance verification | Requires rerunning with the original input data |
+| Publication | 1 conference paper |
 
-## 데이터
+Original market data, the full paper, and internal team materials remain excluded until redistribution rights and the team's publication scope are confirmed.
 
-프로젝트 자료에는 다음 범위가 기재되어 있습니다.
+## Data
 
-- 대상: KOSPI 대형주 50개
-- 기간: 2023.05 - 2025.04
-- 주요 입력: 종목별 일별 수익률, 원/달러 환율 수익률, 외국인 지분율 변화
+The original project materials describe the following scope:
 
-그러나 원본 데이터가 이 저장소에 없으므로 행 수, 결측 처리 결과, 종목 구성과 기간은 현재 공개 저장소만으로 재검증할 수 없습니다. 코드는 아래 컬럼을 가진 `data/merged_50stocks_fx_multi.csv`를 입력으로 가정합니다.
+- Universe: 50 large-cap KOSPI stocks
+- Period: 2023.05–2025.04
+- Main inputs: daily stock returns, USD/KRW returns, and changes in foreign ownership ratios
 
-| 컬럼 | 용도 |
-|---|---|
-| `종목`, `일자` | 종목과 거래일 식별 |
-| `ret` | 종목 수익률 |
-| `fore_chg` | 외국인 지분율 변화 |
-| `USD_ret` | USD/KRW 환율 수익률 |
+Because the original data is not included, the row count, missing-value treatment, stock composition, and period cannot be independently reverified from this repository.
 
-컬럼 자료형, 날짜 형식, 검증 규칙과 합성 예시는 [`data/README.md`](data/README.md)에 정리했습니다.
-
-원본 주가·환율·수급 데이터, 논문 전문과 팀 내부 자료는 공개하지 않습니다. 데이터 출처별 이용 조건과 팀의 공개 범위를 확인하기 전에는 원본 또는 파생 데이터도 추가하지 않습니다.
-
-## 공개 R 코드의 처리 흐름
-
-1. 필수 컬럼과 입력 파일을 확인하고 결측·비유한값 행을 제거합니다.
-2. 공개 코드에 명시된 고정 매핑으로 종목을 산업에 연결합니다.
-3. 산업·월 단위로 `mean_ret`, `mean_fx`, `mean_flow`를 계산합니다.
-4. 각 예측 기준월마다 그 달까지의 산업 월수익률만 사용해 동조 피처를 계산합니다.
-5. 현재 월의 산업 평균수익률이 0보다 큰지를 월 상승 여부로 정의합니다.
-6. Lift가 1.4 이상인 산업을 파트너로 선택하고, 해당 산업들과의 Pearson 상관계수 평균을 `avg_corr`로 사용합니다.
-7. 현재 월의 입력으로 연속된 다음 달 산업 평균수익률을 예측합니다.
-8. 같은 학습 행과 같은 테스트 월에서 세 모델을 비교합니다.
-
-### 미래정보 누수 방지
-
-이전 구현은 전체 기간에서 `mean_corr`를 한 번 계산해 모든 월에 동일한 값으로 붙였습니다. 이는 초기 Walk-Forward fold에도 미래 월의 관계가 반영될 수 있고, 산업별 모델 안에서는 값이 시간에 따라 변하지 않는다는 문제가 있습니다.
-
-현재 구현의 `avg_corr`는 다음 원칙을 따릅니다.
-
-- 기준월 `t`의 피처는 `t`월까지의 데이터만 사용
-- 예측 대상은 `t+1`월 수익률
-- 기준월이 바뀔 때마다 Lift 파트너와 상관계수를 다시 계산
-- 최소 6개월의 과거가 없으면 값을 생성하지 않음
-- 전체 기간 분위수로 값을 경계 처리하지 않음
-
-Lift 기준을 충족하는 파트너가 없으면 `avg_corr = 0`, `partner_count = 0`으로 기록합니다. `partner_count`는 점검용으로 남기며 현재 모델 입력에는 사용하지 않습니다.
-
-이 설계는 미래 관측치 사용을 막고 피처가 시간에 따라 변하도록 합니다. 전체 기간에서 계산한 1·99 분위수 경계 처리도 미래 분포를 볼 수 있어 공개 구현에서 제거했습니다. 다만 6개월은 짧은 추정 구간이므로 관계가 불안정할 수 있습니다.
-
-### 월 상승 여부의 정의
-
-이전 구현의 `any(ret > 0)`은 한 달 중 하루라도 양의 수익률이 있으면 그 달 전체를 상승으로 표시했습니다. 거래일이 많은 월에는 대부분 `TRUE`가 될 수 있어 Lift가 퇴화할 위험이 있습니다.
-
-현재 코드는 먼저 산업별 월평균 수익률을 계산하고 `mean_ret > 0`인 경우만 월 상승으로 정의합니다. 월 수익률을 복리 누적수익률로 정의하는 대안은 원본 변수 `ret`의 단위와 생성 방식을 확인한 뒤 적용해야 합니다.
-
-## 비교 모델
-
-| 모델 | 입력 또는 규칙 | 목적 |
-|---|---|---|
-| `historical_mean` | 학습 구간의 다음 달 수익률 평균 | 단순 예측 기준선 |
-| `rf_baseline` | `mean_ret`, `mean_fx`, `mean_flow` | 동조 피처 없는 Random Forest |
-| `rf_with_sync` | 기본 입력 + `avg_corr` | 동조 피처의 추가 가치 확인 |
-
-세 모델은 `avg_corr`가 존재하는 동일 학습 행과 동일 테스트 월에서 평가합니다. 따라서 피처 추가 모델만 더 적거나 다른 표본을 사용하는 비교를 피합니다.
-
-## 검증 방법
-
-- 산업별로 최소 12개의 공통 학습 행을 확보한 뒤 한 달씩 확장하는 Walk-Forward 방식
-- 각 기준월의 입력으로 다음 달 수익률 예측
-- 전체 Out-of-Sample 구간과 산업별 최근 최대 6개 예측 월의 RMSE·Hit Rate 출력
-- Random Forest의 하이퍼파라미터는 `ntree = 300`으로 고정하며 별도 튜닝하지 않음
-- 같은 fold에서 모델별 seed를 고정해 각 Random Forest 결과를 재현 가능하게 함
-
-두 모델에 같은 seed를 전달해도 predictor 구성이 다르면 내부 bootstrap 표본이 같다고 보장할 수 없습니다. 따라서 baseline과 동조 모델의 차이는 동일 테스트월·공통 학습행을 기준으로 비교하되, Random Forest 자체의 sampling variance가 남는다는 점을 함께 해석해야 합니다.
-
-데이터가 공개 저장소에 없기 때문에 이 저장소에서는 실행 결과와 성능 수치를 독립적으로 재현하지 못했습니다. 기존 README에 있던 산업별 개선 수치는 현재 공개 코드와 데이터로 검증할 수 없어 제거했습니다. 결과를 다시 게시하려면 원본 실행 환경에서 세 모델의 동일-fold 비교를 재실행하고, 표본 수와 함께 산출물을 확인해야 합니다.
-
-## 실행 방법
-
-```bash
-# 1. R 패키지 설치
-Rscript requirements.R
-
-# 2. 분석 코드 실행
-Rscript src/predict_monthly_returns.R
-```
-
-필요한 입력 경로:
+The public R script expects:
 
 ```text
 data/merged_50stocks_fx_multi.csv
 ```
 
-## 한계
+| Column | Purpose |
+|---|---|
+| `종목` | Stock identifier |
+| `일자` | Trading date |
+| `ret` | Stock return |
+| `fore_chg` | Change in foreign ownership ratio |
+| `USD_ret` | USD/KRW return |
 
-- 원본 데이터가 없어 현재 저장소만으로 실행·수치 검증이 불가능합니다.
-- 공개 코드는 K-Means 군집화를 재현하지 않고 고정 산업 매핑을 사용합니다.
-- 24개월이라는 기재 기간이 맞다면 동조관계 추정과 모델 학습에 매우 작은 표본입니다.
-- 월평균 일수익률은 월 복리수익률과 다릅니다. `ret` 정의 확인 전에는 두 값을 동일하게 해석할 수 없습니다.
-- Lift 임계값 1.4와 최소 이력 6개월은 사전 고정값이며 민감도 분석을 수행하지 않았습니다.
-- 이상치 경계 처리를 제거했으므로 극단값에 민감할 수 있으며, 향후에는 각 fold의 학습 구간에서만 추정한 전처리를 검토해야 합니다.
-- Walk-Forward 구조는 시간 순서를 지키지만, Random Forest 튜닝·거래비용·예측구간·통계적 유의성 검증은 포함하지 않습니다.
-- Hit Rate는 수익률의 크기와 경제적 가치를 보여주지 않으며, 평가 월 수와 함께 해석해야 합니다.
+Data types, date format, validation rules, and illustrative synthetic rows are documented in [`data/README.md`](./data/README.md). The original or derived datasets should not be published until source-specific redistribution terms and team consent are confirmed.
+
+## Methodology
+
+The original team project combined three course-based methods:
+
+1. **K-Means clustering** to apply a clustering method learned in class to financial data.
+2. **Random Forest** to apply a prediction method learned in class to monthly industry return forecasting.
+3. **Walk-Forward Validation** to evaluate a time-series prediction model without using a random train-test split.
+
+Seokjun Lee and Minsung Lee jointly designed and implemented the Walk-Forward Validation structure for the team project.
+
+K-Means and Random Forest were applications of methods learned in class. They are not presented as algorithms developed by the team, and they are not presented as Seokjun Lee's sole design or implementation.
+
+## Public Implementation Status
+
+| Item | Public implementation |
+|---|---|
+| Language | R |
+| Libraries | tidyverse, lubridate, randomForest |
+| Industry grouping | Fixed `sector_map` |
+| K-Means | Not implemented |
+| Validation | Expanding Walk-Forward |
+| Models | `historical_mean`, `rf_baseline`, `rf_with_sync` |
+| Metrics | RMSE, Hit Rate |
+
+The public script:
+
+1. checks the input file and required columns, then removes missing and non-finite observations;
+2. joins stocks to industries through the fixed `sector_map`;
+3. calculates monthly `mean_ret`, `mean_fx`, and `mean_flow`;
+4. recalculates the synchronization feature at each cutoff using only data available through month `t`;
+5. predicts the consecutive next month, `t+1`;
+6. uses a Lift threshold of 1.4 and a minimum synchronization history of 6 months;
+7. compares all 3 models on common training rows and the same test month;
+8. starts evaluation after at least 12 common training rows, uses `ntree = 300`, and reports overall results and the most recent 6 prediction months per industry.
+
+The current `avg_corr` design avoids using future months in earlier folds. Full-period quantile clipping was also removed because it could expose future distribution information. If no partner meets the Lift threshold, the script records `avg_corr = 0` and `partner_count = 0`; `partner_count` is retained for inspection but is not currently used as a model input.
+
+No historical improvement figure is presented as a verified result. Without the original input data and execution artifacts, performance must be independently revalidated before any numerical result is reported.
 
 ## My Contribution
 
-- 담당 주식 종목의 데이터를 수집하고 전처리
-- 팀원별로 정리된 종목 데이터를 분석에 사용할 수 있도록 공통 형식으로 통일
-- Minsung Lee와 함께 시계열 예측 모델 평가를 위한 Walk-Forward Validation 구조 설계 및 구현
+- Collected, preprocessed, and aligned the stocks assigned to me to the team's shared format.
+- Co-designed and implemented the Walk-Forward Validation structure for time-series prediction evaluation with Minsung Lee.
 
-## 팀 프로젝트 방법론과 역할 범위
+Role boundaries:
 
-K-Means와 Random Forest는 수업에서 학습한 군집화 및 예측 방법을 실제 금융 데이터에 적용한 것이며, 새로운 알고리즘을 개발하거나 독창적인 모델을 제안한 것은 아닙니다. 두 방법을 Seokjun Lee가 단독으로 설계하거나 구현한 것으로 설명하지 않습니다.
+- Minsung Lee wrote the paper manuscript.
+- Seokjun Lee's publication role is **Co-author**.
+- Seokjun Lee does not claim sole design or implementation of K-Means, Random Forest, or the full project.
 
-- 논문 원고 작성: **Minsung Lee** (단독 작성)
-- Seokjun Lee — Role: **Co-author**
+## Limitations
 
-위 역할 설명은 팀 프로젝트의 실제 분담을 기준으로 합니다. 공개 R 코드는 K-Means를 구현하지 않고 고정 산업 매핑을 사용하므로, 위 팀 프로젝트의 전체 분석 과정과 현재 저장소의 공개 구현 범위를 구분해서 해석해야 합니다.
+- The original data is unavailable, so execution results and performance cannot be independently verified from this repository.
+- The public code does not reproduce K-Means clustering and instead uses a fixed industry mapping.
+- If the documented 24-month period is correct, the sample is small for synchronization estimation and model training.
+- A monthly mean of daily returns is not the same as a compounded monthly return; the definition and unit of `ret` must be confirmed before interpretation.
+- The Lift threshold of 1.4 and the minimum 6-month history are fixed values without sensitivity analysis.
+- Duplicate `(종목, 일자)` keys are not rejected by the current script and could change monthly averages.
+- Extreme values may affect the implementation because full-period clipping was removed; any future preprocessing should be estimated only from each fold's training period.
+- The Walk-Forward structure preserves time order, but Random Forest tuning, transaction costs, prediction intervals, and statistical significance tests are not included.
+- The two Random Forest models use the same fold seed, but different predictor sets do not guarantee identical bootstrap samples.
+- Hit Rate does not measure return magnitude or economic value and should be interpreted together with the number of evaluated months.
 
-## 배운 점과 개선 방향
+## Lessons Learned and Next Steps
 
-이 프로젝트를 다시 정리하면서 분석 결과뿐 아니라,
-데이터와 코드가 다른 사람에게 재현 가능한 형태로 관리되는 것도
-연구의 중요한 일부라는 점을 배웠습니다.
+Revisiting this project showed me that research quality depends not only on analytical results but also on keeping data and code in a form that others can reproduce.
 
-팀원들이 각자 담당한 종목 데이터를 수집하고 정리했기 때문에,
-프로젝트 초기부터 컬럼 형식과 전처리 기준을
-공통으로 정의하는 것이 중요했습니다.
+Because team members collected and organized different assigned stocks, common column formats and preprocessing rules should have been defined at the beginning of the project.
 
-또한 예측 모델을 평가할 때 일반적인 랜덤 분할보다
-시간 순서를 반영한 Walk-Forward Validation이 필요하다는 점을
-구현 과정에서 배웠습니다.
+While implementing the prediction evaluation, I also learned why time-series models require Walk-Forward Validation rather than a general random split.
 
-향후에는 데이터 버전, 전처리 기준, 모델 설정과 실험 결과를
-처음부터 함께 기록하고,
-논문의 방법론과 공개 코드의 차이도
-더 명확하게 관리할 계획입니다.
-
-이 저장소는 취업 포트폴리오용 공개 문서입니다. 위에 확인된 역할 외의 개인 기여, 논문과 공개 코드의 정확한 대응 관계, 데이터 재배포 권리는 추가로 주장하지 않습니다.
+In future projects, I plan to record data versions, preprocessing rules, model settings, and experiment results from the start. I will also document the differences between a paper's methodology and its public implementation more explicitly.
 
 ## Publication
 
 이민성, 홍찬기, 추민주, 이석준, 우지영, “환율 민감도 기반 클러스터링과 동조지수를 이용한 산업별 월간 수익률 예측,” *한국컴퓨터정보학회 2025 하계학술대회 논문집*, 제33권 제2호, pp. 959–961, 2025.07.
 
-- [DBpia 문헌 정보](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12337990)
 - Seokjun Lee — Role: **Co-author**
-- 논문 원문 PDF: 저작권 및 팀 공개 범위 확인 전까지 저장소에 포함하지 않음
+- Manuscript: written by Minsung Lee
+- [Official paper record on DBpia](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12337990)
+- The full paper PDF is not included until copyright and team-publication permissions are confirmed.
+
+This is the only publication associated with this repository.
+
+## Reproduction
+
+Install the required R packages:
+
+```bash
+Rscript requirements.R
+```
+
+Run the public analysis script:
+
+```bash
+Rscript src/predict_monthly_returns.R
+```
+
+Required local input:
+
+```text
+data/merged_50stocks_fx_multi.csv
+```
+
+The commands and input contract are public, but numerical results cannot be reproduced without the unpublished input data. See [`data/README.md`](./data/README.md) before preparing a local file.
+
+## Repository Structure
+
+```text
+exchange-rate-synchronization/
+├── README.md
+├── README.ko.md
+├── requirements.R
+├── data/
+│   ├── README.md
+│   ├── README.ko.md
+│   └── merged_50stocks_fx_multi.csv  # local only; ignored by Git
+└── src/
+    └── predict_monthly_returns.R
+```
+
+[Back to English Profile](https://github.com/jun5007) · [View English Portfolio](https://jun5007.github.io/)
