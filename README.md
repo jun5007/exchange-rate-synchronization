@@ -32,6 +32,7 @@ The project applied clustering and prediction methods learned in class to financ
 | Public R implementation | `PORTFOLIO_REFACTORED_VERSION` in [`src/predict_monthly_returns.R`](src/predict_monthly_returns.R) |
 | Public input data | Not included |
 | Performance verification | Requires rerunning with the original input data |
+| Static validation | `STATICALLY_VALIDATED` |
 | Reproducibility | `CONDITIONAL_REPRODUCIBILITY` |
 | Full run | `FULL_RUN_NOT_VERIFIED` |
 | Publication | 1 conference paper |
@@ -170,7 +171,7 @@ data/merged_50stocks_fx_multi.csv
 
 The commands and input contract are public, but numerical results cannot be reproduced without the unpublished input data. See [`data/README.md`](./data/README.md) before preparing a local file.
 
-Reproducibility status: `CONDITIONAL_REPRODUCIBILITY` / `FULL_RUN_NOT_VERIFIED`.
+Validation status: `STATICALLY_VALIDATED` / `CONDITIONAL_REPRODUCIBILITY` / `FULL_RUN_NOT_VERIFIED`.
 
 ## Repository Structure
 

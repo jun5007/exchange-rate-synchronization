@@ -32,6 +32,7 @@
 | 공개 R 구현 | [`src/predict_monthly_returns.R`](src/predict_monthly_returns.R)의 `PORTFOLIO_REFACTORED_VERSION` |
 | 공개 입력 데이터 | 포함하지 않음 |
 | 성능 검증 | 원본 입력 데이터로 재실행 필요 |
+| 정적 검증 | `STATICALLY_VALIDATED` |
 | 재현성 | `CONDITIONAL_REPRODUCIBILITY` |
 | 전체 실행 | `FULL_RUN_NOT_VERIFIED` |
 | 논문 | 학술대회 논문 1편 |
@@ -170,7 +171,7 @@ data/merged_50stocks_fx_multi.csv
 
 명령과 입력 계약은 공개되어 있지만 비공개 입력 데이터가 없으면 수치 결과를 재현할 수 없습니다. 로컬 파일을 준비하기 전에 [`data/README.ko.md`](./data/README.ko.md)를 확인하세요.
 
-재현성 상태: `CONDITIONAL_REPRODUCIBILITY` / `FULL_RUN_NOT_VERIFIED`.
+검증 상태: `STATICALLY_VALIDATED` / `CONDITIONAL_REPRODUCIBILITY` / `FULL_RUN_NOT_VERIFIED`.
 
 ## 저장소 구조
 
