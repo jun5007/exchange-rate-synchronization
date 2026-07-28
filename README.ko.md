@@ -29,9 +29,11 @@
 | 프로젝트 형태 | 팀 프로젝트 |
 | 원 프로젝트 기간 | 2025.03–2025.06 |
 | 원 연구 파이프라인 | 개요만 문서화되며 이 저장소에서 완전히 재현되지 않음 |
-| 공개 R 구현 | [`src/predict_monthly_returns.R`](src/predict_monthly_returns.R)에 공개 |
+| 공개 R 구현 | [`src/predict_monthly_returns.R`](src/predict_monthly_returns.R)의 `PORTFOLIO_REFACTORED_VERSION` |
 | 공개 입력 데이터 | 포함하지 않음 |
 | 성능 검증 | 원본 입력 데이터로 재실행 필요 |
+| 재현성 | `CONDITIONAL_REPRODUCIBILITY` |
+| 전체 실행 | `FULL_RUN_NOT_VERIFIED` |
 | 논문 | 학술대회 논문 1편 |
 
 원본 시장 데이터, 논문 전문, 팀 내부 자료는 재배포 권리와 팀의 공개 범위를 확인하기 전까지 포함하지 않습니다.
@@ -60,7 +62,7 @@ data/merged_50stocks_fx_multi.csv
 | `fore_chg` | 외국인 지분율 변화 |
 | `USD_ret` | USD/KRW 수익률 |
 
-자료형, 날짜 형식, 검증 규칙, 합성 예시는 [`data/README.ko.md`](./data/README.ko.md)에 정리했습니다. 출처별 재배포 조건과 팀 동의를 확인하기 전에는 원본 또는 파생 데이터를 공개하지 않습니다.
+자료형, 날짜 형식, 검증 규칙과 실제 과거 파일에서 확인한 스키마는 [`data/README.ko.md`](./data/README.ko.md), [`data/schema.csv`](./data/schema.csv), [`data/column_description.md`](./data/column_description.md)에 정리했습니다. 실제 또는 합성 데이터 행은 포함하지 않았습니다. 출처별 재배포 조건과 팀 동의를 확인하기 전에는 원본 또는 파생 데이터를 공개하지 않습니다.
 
 ## 방법론
 
@@ -109,12 +111,12 @@ K-Means와 Random Forest는 수업에서 배운 방법을 적용한 것입니다
 역할 범위:
 
 - 논문 원고는 Minsung Lee가 작성
-- Seokjun Lee의 논문 역할은 **Co-author**
+- Seokjun Lee의 논문 역할은 **공동저자**
 - Seokjun Lee는 K-Means, Random Forest, 프로젝트 전체를 단독으로 설계하거나 구현했다고 주장하지 않음
 
 ## 한계
 
-- 원본 데이터가 없어 이 저장소만으로 실행 결과와 성능을 독립적으로 검증할 수 없습니다.
+- 원본 데이터가 이 공개 저장소에 포함되지 않아 이 저장소만으로 실행 결과와 성능을 독립적으로 검증할 수 없습니다.
 - 공개 코드는 K-Means 군집화를 재현하지 않고 고정 산업 매핑을 사용합니다.
 - 기재된 24개월이 맞다면 동조관계 추정과 모델 학습에 표본이 작습니다.
 - 일별 수익률의 월평균은 월 복리수익률과 다르므로 해석 전에 `ret`의 정의와 단위를 확인해야 합니다.
@@ -139,7 +141,7 @@ K-Means와 Random Forest는 수업에서 배운 방법을 적용한 것입니다
 
 이민성, 홍찬기, 추민주, 이석준, 우지영, “환율 민감도 기반 클러스터링과 동조지수를 이용한 산업별 월간 수익률 예측,” *한국컴퓨터정보학회 2025 하계학술대회 논문집*, 제33권 제2호, pp. 959–961, 2025.07.
 
-- Seokjun Lee — 역할: **Co-author**
+- Seokjun Lee — 역할: **공동저자**
 - 논문 원고: Minsung Lee 작성
 - [DBpia 공식 문헌 정보](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE12337990)
 - 논문 원문 PDF는 저작권과 팀 공개 범위를 확인하기 전까지 포함하지 않습니다.
@@ -168,6 +170,8 @@ data/merged_50stocks_fx_multi.csv
 
 명령과 입력 계약은 공개되어 있지만 비공개 입력 데이터가 없으면 수치 결과를 재현할 수 없습니다. 로컬 파일을 준비하기 전에 [`data/README.ko.md`](./data/README.ko.md)를 확인하세요.
 
+재현성 상태: `CONDITIONAL_REPRODUCIBILITY` / `FULL_RUN_NOT_VERIFIED`.
+
 ## 저장소 구조
 
 ```text
@@ -175,10 +179,16 @@ exchange-rate-synchronization/
 ├── README.md
 ├── README.ko.md
 ├── requirements.R
+├── THIRD_PARTY_NOTICES.md
 ├── data/
 │   ├── README.md
 │   ├── README.ko.md
+│   ├── schema.csv
+│   ├── column_description.md
 │   └── merged_50stocks_fx_multi.csv  # 로컬 전용, Git에서 제외
+├── reports/
+│   └── figures/
+│       └── README.md
 └── src/
     └── predict_monthly_returns.R
 ```

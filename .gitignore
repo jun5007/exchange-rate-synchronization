@@ -1,16 +1,28 @@
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
 .env
-__pycache__/
-.ipynb_checkpoints/
-data/
+
 *.csv
 *.xlsx
 *.xls
+*.rds
+*.RDS
 *.hwp
 *.pdf
+*.pptx
+*.docx
 *.zip
+outputs/
 
 # Publish only the reviewed data contract; keep raw and derived datasets ignored.
-!data/
 data/*
 !data/README.md
 !data/README.ko.md
+!data/schema.csv
+!data/column_description.md
+
+# Do not publish generated figures until they have been reproduced and reviewed.
+reports/figures/*
+!reports/figures/README.md

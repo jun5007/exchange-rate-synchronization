@@ -29,9 +29,11 @@ The project applied clustering and prediction methods learned in class to financ
 | Project type | Team Project |
 | Original project period | 2025.03–2025.06 |
 | Original research pipeline | Documented at a high level; not fully reproduced here |
-| Public R implementation | Available in [`src/predict_monthly_returns.R`](src/predict_monthly_returns.R) |
+| Public R implementation | `PORTFOLIO_REFACTORED_VERSION` in [`src/predict_monthly_returns.R`](src/predict_monthly_returns.R) |
 | Public input data | Not included |
 | Performance verification | Requires rerunning with the original input data |
+| Reproducibility | `CONDITIONAL_REPRODUCIBILITY` |
+| Full run | `FULL_RUN_NOT_VERIFIED` |
 | Publication | 1 conference paper |
 
 Original market data, the full paper, and internal team materials remain excluded until redistribution rights and the team's publication scope are confirmed.
@@ -60,7 +62,7 @@ data/merged_50stocks_fx_multi.csv
 | `fore_chg` | Change in foreign ownership ratio |
 | `USD_ret` | USD/KRW return |
 
-Data types, date format, validation rules, and illustrative synthetic rows are documented in [`data/README.md`](./data/README.md). The original or derived datasets should not be published until source-specific redistribution terms and team consent are confirmed.
+Data types, date format, validation rules, and the observed historical schema are documented in [`data/README.md`](./data/README.md), [`data/schema.csv`](./data/schema.csv), and [`data/column_description.md`](./data/column_description.md). No real or synthetic data rows are included. The original or derived datasets should not be published until source-specific redistribution terms and team consent are confirmed.
 
 ## Methodology
 
@@ -114,7 +116,7 @@ Role boundaries:
 
 ## Limitations
 
-- The original data is unavailable, so execution results and performance cannot be independently verified from this repository.
+- The original data is not included in this public repository, so execution results and performance cannot be independently verified from this repository.
 - The public code does not reproduce K-Means clustering and instead uses a fixed industry mapping.
 - If the documented 24-month period is correct, the sample is small for synchronization estimation and model training.
 - A monthly mean of daily returns is not the same as a compounded monthly return; the definition and unit of `ret` must be confirmed before interpretation.
@@ -168,6 +170,8 @@ data/merged_50stocks_fx_multi.csv
 
 The commands and input contract are public, but numerical results cannot be reproduced without the unpublished input data. See [`data/README.md`](./data/README.md) before preparing a local file.
 
+Reproducibility status: `CONDITIONAL_REPRODUCIBILITY` / `FULL_RUN_NOT_VERIFIED`.
+
 ## Repository Structure
 
 ```text
@@ -175,10 +179,16 @@ exchange-rate-synchronization/
 ├── README.md
 ├── README.ko.md
 ├── requirements.R
+├── THIRD_PARTY_NOTICES.md
 ├── data/
 │   ├── README.md
 │   ├── README.ko.md
+│   ├── schema.csv
+│   ├── column_description.md
 │   └── merged_50stocks_fx_multi.csv  # local only; ignored by Git
+├── reports/
+│   └── figures/
+│       └── README.md
 └── src/
     └── predict_monthly_returns.R
 ```

@@ -14,7 +14,11 @@ The original market, exchange-rate, and foreign-ownership data are not included.
 
 ## Source status
 
-The expected input combines stock returns, USD/KRW returns, and changes in foreign ownership ratios. The specific data providers, extraction fields, collection dates, and licenses are not preserved in the public repository. They must be confirmed from the original team materials before preparing or publishing a replacement input file.
+Status: `SOURCE_CONFIRMATION_REQUIRED`
+
+Historical project materials describe 50 large-cap KOSPI stocks covering 2023.05–2025.04 and combining stock-market, USD/KRW, and foreign-ownership fields. The specific providers, extraction fields, collection dates, acquisition procedure, and licenses are not preserved well enough to claim a reproducible download source. They must be confirmed from the original team materials before preparing or publishing a replacement input file.
+
+No verified acquisition script was found. Obtain each input from a permitted official or licensed source, reproduce the required five-column contract, and place the resulting local-only file at the path above.
 
 ## Required columns
 
@@ -32,16 +36,11 @@ The intended row grain is one stock on one trading date (`종목` × `일자`). 
 
 Before interpreting results, confirm the unit and construction method of `ret`, `fore_chg`, and `USD_ret`. In particular, a daily arithmetic return and a percentage-point value must not be treated as interchangeable.
 
-## Illustrative synthetic row
+## Schema documentation
 
-The following row only demonstrates the schema. It is not a record from the original project data.
-
-```csv
-종목,일자,ret,fore_chg,USD_ret
-삼성전자,2024-01-02,0.0012,0.0003,-0.0008
-삼성전자,2024-01-03,-0.0006,-0.0001,0.0005
-SK하이닉스,2024-01-02,0.0018,0.0002,-0.0008
-```
+- [`schema.csv`](./schema.csv) records the 26 columns observed in the historical integrated table without publishing any data rows.
+- [`column_description.md`](./column_description.md) separates the five columns required by the public script from additional historical fields.
+- No real or synthetic sample rows are included.
 
 ## Local placement
 
@@ -50,13 +49,15 @@ exchange-rate-synchronization/
 ├─ data/
 │  ├─ README.md
 │  ├─ README.ko.md
+│  ├─ schema.csv
+│  ├─ column_description.md
 │  └─ merged_50stocks_fx_multi.csv  # local only; ignored by Git
 ├─ src/
 │  └─ predict_monthly_returns.R
 └─ requirements.R
 ```
 
-The repository's `.gitignore` keeps `merged_50stocks_fx_multi.csv` and other raw data files out of Git while allowing this documentation file.
+The repository's `.gitignore` keeps `merged_50stocks_fx_multi.csv` and other raw data files out of Git while allowing the reviewed schema documentation.
 
 ---
 

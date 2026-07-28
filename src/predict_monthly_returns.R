@@ -1,3 +1,7 @@
+# PORTFOLIO_REFACTORED_VERSION
+# Prepared for public review and conditional reproducibility.
+# This is not the historical final team pipeline or the paper's full implementation.
+
 ############################################################
 # 산업별 월간 수익률 예측
 #
